@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notes</title>
+    <link rel = "stylesheet" href = {% static "css/styles.css" %}>
+</head>
+<body>
+<h1> Username - {{ name }}</h1>
+<div>
+    <h2>Your notes</h2>
+    {% for note in notes %}
+        <h2>
+            {{ note.text }}
+        </h2>
+    {% endfor %}
+</div>
+</body>
+</html>
