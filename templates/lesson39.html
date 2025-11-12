@@ -4,16 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Notes</title>
-    <link rel = "stylesheet" href = {% static "css/styles.css" %}>
+    <link rel = "stylesheet" href = {% static "css/lesson40.css" %}>
 </head>
 <body>
 <h1> Username - {{ name }}</h1>
-<div>
-    <h2>Your notes</h2>
+<div class = all-notes-class>
+    <h1>Your notes</h1>
     {% for note in notes %}
-        <h2>
-            {{ note.text }}
-        </h2>
+        <div class = notes-class>
+            <h3>
+            Note number  ----------  Note topic  ---------- Deadline date
+            </h3>
+            <h3>
+                {{ note.id }} - {{ note.title }} - {{ note.reminder }}
+            </h3>
+            <h3>
+                What you should to do {{ note.text }}
+            </h3>
+        </div>
     {% endfor %}
 </div>
 </body>
