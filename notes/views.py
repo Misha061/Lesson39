@@ -1,14 +1,48 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
+
+from .forms import NoteForm
 from .models import Note, NoteType
-def note_view(request):
-    return HttpResponse("Hello from Notes app")
 
-# def remarks(request): ### Lesson39
-#
-#     return render(request, "lesson39.html", {"name":"Misha", "notes" : [{"text" : "Make homework"}, {"text":"Go to the shop"}]})
+class NoteReadView(DeleteView):
+    model = Note
+    form_class = NoteForm
+    template_name = "note_detail.html"
 
-def notes_view(request):
-    notes = Note.objects.all()
-    note_types = NoteType.objects.all()
-    return render(request, "lesson39.html", {"notes": notes, "note_types": note_types, "name" : "Misha"})
+class NoteListView(ListView):
+    model = Note
+    form_class = NoteForm
+    template_name = "note_list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        title = self.request.GET.get('title')
+        reminder = self.request.GET.get('reminder')
+        name_search = self.request.GET.get('name_search')
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+        if reminder:
+            queryset = queryset.filter(reminder__icontains=reminder)
+        if name_search:
+            queryset = queryset.filter(name__icontains=name_search)
+
+        return queryset
+
+class NoteCreateView(CreateView):
+    model = Note
+    form_class = NoteForm
+    template_name = "note_form.html"
+    success_url = reverse_lazy("note_list")
+
+class NoteUpdateView(UpdateView):
+    model = Note
+    form_class = NoteForm
+    template_name = "note_form.html"
+    success_url = reverse_lazy("note_list")
+
+class NoteDeleteView(DeleteView):
+    model = Note
+    template_name = "note_delete.html"
+    success_url = reverse_lazy("note_list")

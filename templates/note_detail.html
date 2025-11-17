@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+ <link rel = "stylesheet" href = {% static "css/lesson40.css" %}>   
+</head>
+<body>
+<div class = "notes-class">
+    <h2 >
+        Note name - {{ note.name }}
+    </h2>
+    <h2>
+        Note topic - {{ note.title }} 
+    </h2>
+    <h2>
+        What you should to do - {{ note.text }}
+    </h2>
+    <h2>
+         Data - {{ note.reminder }}
+    </h2>
+</div>
+</body>
+</html>
