@@ -1,7 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notes', null=True)
     name = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
     text = models.CharField(max_length=1000)

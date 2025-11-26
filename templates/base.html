@@ -7,25 +7,44 @@
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
         .container { padding-top: 2rem; padding-bottom: 2rem; }
-        .actions { margin-top: 1rem; }
-        .btn { margin-right: 0.5rem; }
         footer { margin-top: auto; }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
 {# Навігаційне меню #}
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{% url 'note_list' %}">Менеджер Нотаток</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'note_create' %}">Додати нотатку</a>
                 </li>
+            </ul>
+            
+            {# Права частина меню: Авторизація #}
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Привіт, <strong>{{ user.username }}</strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Вийти</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Вхід</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary ms-2" href="{% url 'register' %}">Реєстрація</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -35,8 +54,9 @@
 {% if messages %}
     <div class="container">
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
     </div>
