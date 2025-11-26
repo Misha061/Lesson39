@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Список нотаток{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h2>Мої нотатки</h2>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'note_create' %}" class="btn btn-primary">Створити нотатку</a>
+            </div>
+        </div>
+
+    {#  Пошук (відповідно до NoteListView get_queryset) #}
+    <div class="card mb-4 p-3 bg-light">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="title" 
+                       placeholder="Пошук за заголовком..." 
+                       value="{{ request.GET.title|default:'' }}">
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="name_search" 
+                       placeholder="Пошук за ім'ям..." 
+                       value="{{ request.GET.name_search|default:'' }}">
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" name="reminder" 
+                       value="{{ request.GET.reminder|default:'' }}">
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100" type="submit">Пошук</button>
+            </div>
+        </form>
+    </div>
+
+    {% if object_list %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th>Заголовок</th>
+                    <th>Ім'я</th>
+                    <th>Текст (уривок)</th>
+                    <th>Нагадування</th>
+                    <th class="text-end">Дії</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for note in object_list %}
+                    <tr>
+                        <td><strong>{{ note.title }}</strong></td>
+                        <td>{{ note.name }}</td>
+                        <td>{{ note.text|truncatechars:50 }}</td>
+                        <td>
+                            {% if note.reminder %}
+                                <span class="badge bg-info text-dark">{{ note.reminder|date:"d.m.Y" }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'note_detail' note.pk %}"
+                                   class="btn btn-sm btn-outline-info">Перегляд
+                                </a>
+                                <a href="{% url 'note_update' note.pk %}"
+                                   class="btn btn-sm btn-outline-warning">Редагувати
+                                </a>
+                                <a href="{% url 'note_delete' note.pk %}"
+                                   class="btn btn-sm btn-outline-danger">Видалити
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {# Пагінація (якщо використовується у майбутньому) #}
+        {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Попередня</a></li>
+                    {% endif %}
+                    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Наступна</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-info">
+            Нотаток не знайдено. <a href="{% url 'note_list' %}" class="alert-link">Скинути фільтри</a>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Нотатки{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        .container { padding-top: 2rem; padding-bottom: 2rem; }
+        .actions { margin-top: 1rem; }
+        .btn { margin-right: 0.5rem; }
+        footer { margin-top: auto; }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+{# Навігаційне меню #}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'note_list' %}">Менеджер Нотаток</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'note_create' %}">Додати нотатку</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{# Повідомлення #}
+{% if messages %}
+    <div class="container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{# Основний контент #}
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+{# Footer #}
+<footer class="footer mt-auto bg-light py-3">
+    <div class="container text-center">
+        <span class="text-muted">(c) {% now "Y" %} Нотатки. Всі права захищені.</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+{% block extra_js %}
+{% endblock %}
+
+</body>
+</html>

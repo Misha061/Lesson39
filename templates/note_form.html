@@ -1,6 +1,58 @@
-<form method="post">
+{% extends 'base.html' %}
 
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+{% block content %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="mb-4 text-center">
+                    {% if form.instance.pk %}
+                        Редагування нотатки
+                    {% else %}
+                        Створення нової нотатки
+                    {% endif %}
+                </h2>
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            {# Відображення помилок форми #}
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {{ field.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    {# Додаємо класи bootstrap до полів input через JS або widget, або просто обгортку #}
+                                </div>
+                            {% endfor %}
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <a href="{% url 'note_list' %}" class="btn btn-secondary me-md-2">Скасувати</a>
+                                <button type="submit" class="btn btn-success">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Невеликий скрипт, щоб додати клас form-control до полів Django форми автоматично #}
+    <script>
+        document.querySelectorAll('input, textarea, select').forEach(element => {
+            if (!element.classList.contains('form-check-input')) {
+                element.classList.add('form-control');
+            }
+        });
+    </script>
+{% endblock %}
